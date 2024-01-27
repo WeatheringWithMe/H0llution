@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(SteamBoiler.class)
+@Mixin(value = SteamBoiler.class, remap = false)
 public abstract class MixinSteamBoiler extends MetaTileEntity {
 
     @Shadow @Final protected boolean isHighPressure;

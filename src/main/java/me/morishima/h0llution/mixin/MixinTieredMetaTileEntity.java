@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
-@Mixin(TieredMetaTileEntity.class)
+@Mixin(value = TieredMetaTileEntity.class, remap = false)
 public abstract class MixinTieredMetaTileEntity extends MetaTileEntity {
     @Unique private double h0llution$pollutionPerTick;
     @Unique private double h0llution$pollutionExplosion;
