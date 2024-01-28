@@ -18,8 +18,22 @@ public final class ConfigHolder {
     @Config.RequiresMcRestart
     @Config.RequiresWorldRestart
     @Config.Comment({
+            "Exhaust pollution amount when single machine working."
+    })
+    public static double singleMachineWorkingPollution = 10;
+
+    @Config.RequiresMcRestart
+    @Config.RequiresWorldRestart
+    @Config.Comment({
             "Exhaust pollution amount when single machine exploded."
     })
     public static double singleMachineExplosionPollution = 500;
+
+    @Config.RequiresMcRestart
+    @Config.RequiresWorldRestart
+    @Config.Comment({
+            "Adjust amount per tier."
+    })
+    public static double adjustPerTier = 5;
 
 }

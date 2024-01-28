@@ -1,8 +1,7 @@
-package me.morishima.h0llution.mixin;
+package me.morishima.h0llution.mixin.machine;
 
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.common.metatileentities.steam.boiler.SteamBoiler;
-import me.morishima.h0llution.api.capability.CapabilityHandler;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.chunk.Chunk;
 import org.spongepowered.asm.mixin.Final;
@@ -11,6 +10,8 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import static me.morishima.h0llution.H0llution.addPollution;
 
 @Mixin(value = SteamBoiler.class, remap = false)
 public abstract class MixinSteamBoiler extends MetaTileEntity {
@@ -29,12 +30,12 @@ public abstract class MixinSteamBoiler extends MetaTileEntity {
         if (isActive()) {
             if (metaTileEntityId.getPath().contains("steam_boiler_coal")) {
                 if (isHighPressure) {
-                    chunk.getCapability(CapabilityHandler.POLLUTION, null).addPollution(30);
+                    addPollution(chunk, 30);
                 } else {
-                    chunk.getCapability(CapabilityHandler.POLLUTION, null).addPollution(20);
+                    addPollution(chunk, 20);
                 }
             } else if (metaTileEntityId.getPath().equals("steam_boiler_lava_steel")) {
-                chunk.getCapability(CapabilityHandler.POLLUTION, null).addPollution(20);
+                addPollution(chunk, 20);
             }
         }
     }

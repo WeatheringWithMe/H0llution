@@ -1,8 +1,9 @@
-package me.morishima.h0llution.mixin;
+package me.morishima.h0llution.mixin.machine;
 
-import gregtech.api.metatileentity.MetaTileEntity;
+import gregtech.api.capability.impl.AbstractRecipeLogic;
 import gregtech.api.metatileentity.TieredMetaTileEntity;
-import me.morishima.h0llution.api.capability.CapabilityHandler;
+import gregtech.api.metatileentity.WorkableTieredMetaTileEntity;
+import gregtech.api.metatileentity.multiblock.ICleanroomProvider;
 import me.morishima.h0llution.api.config.ConfigHolder;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
@@ -21,27 +22,33 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
-@Mixin(value = TieredMetaTileEntity.class, remap = false)
-public abstract class MixinTieredMetaTileEntity extends MetaTileEntity {
-    @Unique private double h0llution$pollutionPerTick;
-    @Unique private double h0llution$pollutionExplosion;
-    @Shadow @Final private int tier;
+import static me.morishima.h0llution.H0llution.addPollution;
 
-    public MixinTieredMetaTileEntity(ResourceLocation metaTileEntityId) {
-        super(metaTileEntityId);
-        h0llution$pollutionPerTick = 10 * tier;
-        h0llution$pollutionExplosion = 500 * tier;
+@Mixin(value = WorkableTieredMetaTileEntity.class, remap = false)
+public abstract class MixinWorkableTieredMetaTileEntity extends TieredMetaTileEntity {
+    @Shadow @Final protected AbstractRecipeLogic workable;
+    @Unique
+    private double h0llution$pollutionPerTick;
+    @Unique private double h0llution$pollutionExplosion;
+    @Shadow private ICleanroomProvider cleanroom;
+    public MixinWorkableTieredMetaTileEntity(ResourceLocation metaTileEntityId, int tier) {
+        super(metaTileEntityId, tier);
+        h0llution$pollutionPerTick = ConfigHolder.singleMachineWorkingPollution - tier * ConfigHolder.adjustPerTier;
+        h0llution$pollutionExplosion = ConfigHolder.singleMachineExplosionPollution - tier * ConfigHolder.adjustPerTier;
     }
 
-    @Inject(method = "update", at = @At("HEAD"))
-    public void update(CallbackInfo ci) {
+    @Override
+    public void update() {
         Chunk chunk = getWorld().getChunk(getPos());
         if (ConfigHolder.enableSingleMachineDefaultPollution) {
-            if (isActive()) {
-                chunk.getCapability(CapabilityHandler.POLLUTION, null).addPollution(h0llution$pollutionPerTick);
+            if (workable.isWorking()) {
+                addPollution(chunk, h0llution$pollutionPerTick);
+                if (cleanroom.isClean()) {
+                    cleanroom.adjustCleanAmount(-1);
+                }
             }
             if (wasExploded()) {
-                chunk.getCapability(CapabilityHandler.POLLUTION, null).addPollution(h0llution$pollutionExplosion);
+                addPollution(chunk, h0llution$pollutionExplosion);
             }
         }
     }
@@ -54,4 +61,5 @@ public abstract class MixinTieredMetaTileEntity extends MetaTileEntity {
             tooltip.add(I18n.format("h0llution.pollution_explosion.desc", h0llution$pollutionPerTick));
         }
     }
+
 }

@@ -6,10 +6,12 @@
 	"minVersion": "0.8.5",
 	"compatibilityLevel": "JAVA_8",
 	"mixins": [
-		"MixinRecipeMap",
-		"MixinSteamBoiler",
-		"MixinTieredMetaTileEntity",
-		"MixinWorkableTieredMetaTileEntity"
+		"machine.MixinCharcoalPileIgniter",
+		"machine.MixinSteamBoiler",
+		"machine.MixinWorkableTieredMetaTileEntity",
+		"workable.MixinAbstractRecipeLogic",
+		"workable.MixinLargeCombustionEngineWorkableHandler",
+		"workable.MixinLargeTurbineWorkableHandler"
 	],
 	"server": [],
 	"client": []
