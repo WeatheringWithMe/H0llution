@@ -1,20 +1,14 @@
 package me.morishima.h0llution;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import gregtech.GTInternalTags;
 import me.morishima.h0llution.api.capability.CapabilityHandler;
-import net.minecraft.client.Minecraft;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.event.FMLConstructionEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
-import java.util.Map;
 
 @Mod(
         modid = Tags.MOD_ID,
@@ -23,10 +17,10 @@ import java.util.Map;
         dependencies = GTInternalTags.DEP_VERSION_STRING
 )
 public class H0llution {
+    public static final HashMap<String, Double> cfgMap = new HashMap<>();
+    public static final Logger LOGGER = LogManager.getLogger(Tags.MOD_NAME);
 
-    public static Map<String, Double> cfgMap = new HashMap<>();
-
-    static {
+    static  {
         cfgMap.put("primitive_blast_furnace", 200.0);
         cfgMap.put("electric_blast_furnace", 400.0);
         cfgMap.put("implosion_compressor", 50000.0);
@@ -53,17 +47,8 @@ public class H0llution {
     }
 
     @Mod.EventHandler
-    public void onConstruction(FMLConstructionEvent event) {
-        String fileName = Minecraft.getMinecraft().gameDir.getPath() + "/config/h0llution/configuration.json";
-
-        try (FileOutputStream fos = new FileOutputStream(fileName);
-             OutputStreamWriter isr = new OutputStreamWriter(fos,
-                     StandardCharsets.UTF_8)) {
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            gson.toJson(H0llution.cfgMap, isr);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public void onPreInit(FMLPreInitializationEvent event) {
+        CapabilityHandler.register();
     }
 
 }

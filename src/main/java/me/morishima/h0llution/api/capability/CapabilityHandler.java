@@ -18,7 +18,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @Mod.EventBusSubscriber
 public class CapabilityHandler {
-    private static final ResourceLocation Pollution = new ResourceLocation(Tags.MOD_ID, "zen_chunk_cap");
+    private static final ResourceLocation Pollution = new ResourceLocation(Tags.MOD_ID, "pollution");
 
     @CapabilityInject(IPollution.class)
     public static Capability<IPollution> POLLUTION = null;
@@ -39,8 +39,8 @@ public class CapabilityHandler {
 
             @Override
             public void readNBT(Capability<IPollution> capability, IPollution instance, EnumFacing side, NBTBase nbt) {
-                if (nbt instanceof NBTTagCompound) {
-                    instance.setPollution(((NBTTagCompound) nbt).getDouble("pollution"));
+                if (nbt instanceof NBTTagCompound tag) {
+                    instance.setPollution(tag.getDouble("pollution"));
                 }
             }
         }, Pollution::new);

@@ -2,7 +2,7 @@ package me.morishima.h0llution.api.worlddata;
 
 public class Pollution implements IPollution {
 
-    private double pollution;
+    private double pollution = 0;
 
     @Override
     public double getPollution() {

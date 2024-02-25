@@ -24,7 +24,7 @@ public class PollutionCapabilityProvider implements ICapabilityProvider {
     @Nullable
     @Override
     public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
-        if (capability == CapabilityHandler.POLLUTION) {
+        if (hasCapability(capability, facing)) {
             return CapabilityHandler.POLLUTION.cast(this.pollution);
         }
         return null;
